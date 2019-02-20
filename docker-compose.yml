@@ -1,0 +1,10 @@
+version: '2'
+services:
+  django:
+    container_name: shop-yen-server_django
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+    command: /start.sh
+    ports:
+      - "8000:8000"

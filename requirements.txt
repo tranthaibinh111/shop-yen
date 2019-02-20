@@ -1,0 +1,5 @@
+# Django REST server
+django==2.1.7
+
+# Timezone
+pytz==2018.9
