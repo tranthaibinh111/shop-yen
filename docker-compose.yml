@@ -1,10 +1,44 @@
+# https://docs.docker.com/compose/compose-file/compose-file-v2/
 version: '2'
+
+volumes:
+  shop_yen_postgres_data: {}
+  shop_yen_postgres_backups: {}
+  shop_yen_ipython_data: {}
+
 services:
+  postgres:
+    env_file: ./shop-yen-server/config/.env
+    container_name: shop-yen-server_postgres
+    image: postgres:11.2
+    volumes:
+      - shop_yen_postgres_data:/var/lib/postgresql/data
+      - shop_yen_postgres_backups:/backups
+      - ./backups:/backups
+    ports:
+      - "5432:5432"
+
   django:
+    env_file: ./shop-yen-server/config/.env
     container_name: shop-yen-server_django
     build:
       context: .
-      dockerfile: ./compose/django/Dockerfile
+      dockerfile: /compose/django/Dockerfile
     command: /start.sh
+    depends_on:
+      - postgres
+    volumes:
+      - ./shop-yen-server:/app
+      - shop_yen_ipython_data:/root/.ipython
+    links:
+      - postgres
     ports:
       - "8000:8000"
+
+  nginx:
+    container_name: shop-yen-server_nginx
+    build: ./compose/nginx/
+    depends_on:
+      - django
+    ports:
+      - "0.0.0.0:80:80"

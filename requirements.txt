@@ -1,5 +1,15 @@
 # Django REST server
 django==2.1.7
+gunicorn==19.9.0
 
 # Timezone
 pytz==2018.9
+
+# Configuration
+# https://django-environ.readthedocs.io/en/latest/
+django-environ==0.4.3
+
+# Python-PostgreSQL Database Adapter
+psycopg2==2.7.7
+# http://initd.org/psycopg/docs/install.html#binary-install-from-pypi
+psycopg2-binary==2.7.7
