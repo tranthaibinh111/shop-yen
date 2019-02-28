@@ -8,6 +8,6 @@ RUN pip install -r requirements.txt
 ADD ./compose/django/start.sh /
 RUN chmod +x start.sh
 
-ADD ./shop-yen-server /app
+ADD . /app
 RUN chmod +x app/manage.py
 WORKDIR /app

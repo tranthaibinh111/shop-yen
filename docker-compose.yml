@@ -8,7 +8,7 @@ volumes:
 
 services:
   postgres:
-    env_file: ./shop-yen-server/config/.env
+    env_file: ./config/.env
     container_name: shop-yen-server_postgres
     image: postgres:11.2
     volumes:
@@ -19,7 +19,7 @@ services:
       - "5432:5432"
 
   django:
-    env_file: ./shop-yen-server/config/.env
+    env_file: ./config/.env
     container_name: shop-yen-server_django
     build:
       context: .
@@ -28,7 +28,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./shop-yen-server:/app
+      - .:/app
       - shop_yen_ipython_data:/root/.ipython
     links:
       - postgres
