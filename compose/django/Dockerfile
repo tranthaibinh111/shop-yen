@@ -9,4 +9,5 @@ ADD ./compose/django/start.sh /
 RUN chmod +x start.sh
 
 ADD ./shop-yen-server /app
+RUN chmod +x app/manage.py
 WORKDIR /app

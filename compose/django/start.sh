@@ -1,6 +1,8 @@
 #!/bin/bash
 function manage_app () {
+    python manage.py makemigrations
     python manage.py migrate
+    python manage.py collectstatic --no-input
 }
 
 function start_development() {
@@ -15,11 +17,10 @@ function start_production() {
     gunicorn config.wsgi -w 4 -b 0.0.0.0:8000 --chdir=/app --log-file -
 }
 
-echo $DEBUG
-# if [ $DEBUG == "True" ]; then
-#     # use development server
-#     start_development
-# else
+if [ $DEBUG == "True" ]; then
+    # use development server
+    start_development
+else
     # use production server
     start_production
-# fi
+fi

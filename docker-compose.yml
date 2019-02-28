@@ -32,13 +32,15 @@ services:
       - shop_yen_ipython_data:/root/.ipython
     links:
       - postgres
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
 
   nginx:
     container_name: shop-yen-server_nginx
-    build: ./compose/nginx/
+    image: nginx:latest
     depends_on:
       - django
+    volumes:
+      - ./compose/nginx:/etc/nginx/conf.d
     ports:
-      - "0.0.0.0:80:80"
+      - "80:80"
