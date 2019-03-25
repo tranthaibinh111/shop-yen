@@ -103,4 +103,11 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# pycharm
 .idea/
+
+# visual code
+.vscode/
+
+# Django collection
+static/

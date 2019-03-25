@@ -13,9 +13,22 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
-from django.urls import path
+from django.conf.urls import url, include
+from rest_framework.authtoken import views
+if settings.DEBUG:
+    from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls),
+    url(r'^api-auth/', include('rest_framework.urls')),
+    url(r'^api-token-auth/', views.obtain_auth_token),
+    url(r'^mvc/', include('mvc.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        # https://www.django-rest-framework.org/topics/documenting-your-api/
+        url(r'^docs/', include_docs_urls(title='Shop Yen API'))
+    ]

@@ -17,7 +17,8 @@ function start_production() {
     gunicorn config.wsgi -w 4 -b 0.0.0.0:8000 --chdir=/app --log-file -
 }
 
-if [ $DEBUG == "True" ]; then
+if [ "$DEBUG" = "True" ]
+then
     # use development server
     start_development
 else

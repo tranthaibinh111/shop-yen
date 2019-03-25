@@ -1,5 +1,5 @@
 # https://docs.docker.com/compose/compose-file/compose-file-v2/
-version: '2'
+version: '3.7'
 
 volumes:
   shop_yen_postgres_data: {}
@@ -9,7 +9,7 @@ volumes:
 services:
   postgres:
     env_file: ./config/.env
-    container_name: shop-yen-server_postgres
+    container_name: shop-yen_postgres
     image: postgres:11.2
     volumes:
       - shop_yen_postgres_data:/var/lib/postgresql/data
@@ -20,10 +20,10 @@ services:
 
   django:
     env_file: ./config/.env
-    container_name: shop-yen-server_django
+    container_name: shop-yen_django
     build:
       context: .
-      dockerfile: /compose/django/Dockerfile
+      dockerfile: ./compose/django/Dockerfile
     command: /start.sh
     depends_on:
       - postgres
@@ -32,15 +32,5 @@ services:
       - shop_yen_ipython_data:/root/.ipython
     links:
       - postgres
-    expose:
-      - "8000"
-
-  nginx:
-    container_name: shop-yen-server_nginx
-    image: nginx:latest
-    depends_on:
-      - django
-    volumes:
-      - ./compose/nginx:/etc/nginx/conf.d
     ports:
-      - "80:80"
+      - "8000:8000"
