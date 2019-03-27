@@ -1,12 +1,14 @@
-import environ
 import pandas as pd
+import numpy as np
+from datetime import date
+from django.conf import settings
 from pandas import ExcelFile
 from utils.message import Message
 
 
 class ShopYenExcel:
     def __init__(self, path_to_file: str):
-        self.columns = environ.Env().list('COLUMNS', cast=str, default=list())
+        self.columns = settings.COLUMN_EXCEL
         self.file = ExcelFile(path_to_file)
 
     def check_format_excel(self, file: ExcelFile) -> bool:
@@ -29,7 +31,7 @@ class ShopYenExcel:
                     message = "File: {}\n".format(file.io)
                     message += "Sheet: {}\n".format(sheet)
                     message += "Column: {} don't exist in {}".format(column, self.columns)
-                    Message(title, message).exception_console()
+                    Message(**{'title': title, 'message': message}).exception_console()
                     return False
         return True
 
@@ -53,13 +55,16 @@ class ShopYenExcel:
             return list()
 
         customers = list()
-        df = pd.read_excel(self.file)
+        df = pd.read_excel(self.file, dtype={'full_name': str, 'birthday': date, 'mobile': str, 'email': str})
         for sheet in self.file.sheet_names:
-            customer = dict()
             columns = pd.read_excel(self.file, sheet).columns
             for index, row in df.iterrows():
+                customer = dict()
                 for column in columns:
-                    customer.update({column: row[column]})
+                    value = row[column]
+                    if value is np.nan:
+                        value = None
+                    customer.update({column: value})
                 customers.append(customer)
 
         return customers

@@ -53,6 +53,8 @@ LOCAL_APP = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APP
+# https://docs.djangoproject.com/en/2.1/topics/auth/customizing/#substituting-a-custom-user-model
+AUTH_USER_MODEL = 'mvc.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -147,3 +149,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+# Setting a path for excel folder which used to insert customer info
+PATH_IMPORT_EXCEL = 'import/excel'
+COLUMN_EXCEL = env.list('COLUMN_EXCEL', cast=str, default=list())

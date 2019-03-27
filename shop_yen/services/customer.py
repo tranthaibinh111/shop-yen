@@ -8,14 +8,13 @@ from utils.excel import ShopYenExcel
 
 
 class CustomerService:
-    @classmethod
-    def change_head_mobile(cls, mobile) -> str:
+    def change_head_mobile(self, mobile) -> str:
         # Check mobile null
-        if not mobile:
+        if not isinstance(mobile, str):
             return str()
         # Check head number is 4 character
         head_number = mobile[:4]
-        if len(head_number) == 4:
+        if len(head_number) != 4:
             return str()
         # Change head mobile
         # Viettel
@@ -68,15 +67,14 @@ class CustomerService:
         else:
             return str()
 
-    @classmethod
-    def import_excel(cls, path_to_file: str):
+    def import_excel(self, path_to_file: str) -> list:
         """
         Import customer info in Customer Table
         :param path_to_file:
         :return:
         """
         customers = list()
-        user = User.objects.filter(username='yensaomiennam')
+        user = User.objects.filter(username='yensaomiennam').first()
         for row in ShopYenExcel(path_to_file).read_excel():
             # full name
             full_name = row.get('full_name')
@@ -100,59 +98,71 @@ class CustomerService:
                     birthday = None
             # add contact mobile
             mobile = row.get('mobile')
-            if mobile:
+            if isinstance(mobile, str):
                 mobile = mobile.strip()
                 customers.append(Customer(
                     first_name=first_name,
                     last_name=last_name,
                     full_name=full_name,
                     birthday=birthday,
-                    contact_type=Customer.CONTACT_TYPE.M,
+                    contact_type=ContactChoice.M.name,
                     contact=mobile,
                     creator=user,
                     writer=user
                 ))
                 # add contact mobile which have 10 number
                 if len(mobile) == 11:
-                    mobile = cls.change_head_mobile(mobile)
-                    customers.append(Customer(
-                        first_name=first_name,
-                        last_name=last_name,
-                        full_name=full_name,
-                        birthday=birthday,
-                        contact_type=Customer.CONTACT_TYPE.M,
-                        contact=mobile,
-                        creator=user,
-                        writer=user
-                    ))
+                    mobile = self.change_head_mobile(mobile)
+                    if isinstance(mobile, str):
+                        customers.append(Customer(
+                            first_name=first_name,
+                            last_name=last_name,
+                            full_name=full_name,
+                            birthday=birthday,
+                            contact_type=ContactChoice.M.name,
+                            contact=mobile,
+                            creator=user,
+                            writer=user
+                        ))
             # add contact email
-            if row.get('email'):
+            email = row.get('email')
+            if isinstance(email, str):
                 customers.append(Customer(
                     first_name=first_name,
                     last_name=last_name,
                     full_name=full_name,
                     birthday=birthday,
-                    contact_type=Customer.CONTACT_TYPE.E,
-                    contact=row.get('email'),
+                    contact_type=ContactChoice.E.name,
+                    contact=email,
                     creator=user,
                     writer=user
                 ))
-        # Insert data into Customer
-        data = list()
-        for customer in customers:
-            # Check exist in Customer
-            if not Customer.objects.filter(
-                        Q(full_name=customer.full_name) &
-                        Q(contact_type=customer.contact_type) &
-                        Q(contact=customer.contact)
-                    ).exists():
-                data.append(customer)
-            # Insert data if data length == 100
-            if len(data) > 100:
-                Customer.objects.bulk_create(data)
-                data.clear()
-        if len(data) > 0:
-            Customer.objects.bulk_create(data)
         # Remove file target when finished
         if os.path.exists(path_to_file):
             os.remove(path_to_file)
+        return customers
+
+    @staticmethod
+    def insert_customers(customers: list):
+        # Insert data into Customer
+        data = list()
+        customer_news = list()
+        for customer in customers:
+            # Check exist in Customer
+            if not Customer.objects.filter(
+                    Q(full_name=customer.full_name) &
+                    Q(contact_type=customer.contact_type) &
+                    Q(contact=customer.contact)
+            ).exists():
+                data.append(customer)
+            # Insert data if data length == 100
+            if len(data) > 100:
+                news = Customer.objects.bulk_create(data)
+                for new in news:
+                    customer_news.append(new)
+                data.clear()
+        if len(data) > 0:
+            news = Customer.objects.bulk_create(data)
+            for new in news:
+                customer_news.append(new)
+        return customer_news

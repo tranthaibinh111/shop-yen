@@ -13,7 +13,7 @@ class Message:
         template += "===========================================================\n"
         template += "=             Chuong trinh shop yen - Console             =\n"
         template += "===========================================================\n"
-        template += "{}\n"
-        template += "{}\n"
+        template += "{}\n".format(self.title)
+        template += "{}\n".format(self.message)
 
-        print(template.format(self.title, self.message))
+        print(template)

@@ -7,7 +7,7 @@ class User(AbstractUser):
 
     @property
     def name(self):
-        name = '{} {}'.format(self.first_name, self.last_name)
+        name = '{} {}'.format(self.first_name, self.last_name).strip()
         if not name:
             name = 'User #{}'.format(self.pk)
         return name

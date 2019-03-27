@@ -1,1 +1,1 @@
-from .customer import Customer
+from .customer import GenderChoice, ContactChoice, Customer
