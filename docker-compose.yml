@@ -15,8 +15,6 @@ services:
       - shop_yen_postgres_data:/var/lib/postgresql/data
       - shop_yen_postgres_backups:/backups
       - ./backups:/backups
-    ports:
-      - "5432:5432"
 
   django:
     env_file: ./config/.env
@@ -32,5 +30,15 @@ services:
       - shop_yen_ipython_data:/root/.ipython
     links:
       - postgres
+    expose:
+      - "8000"
+
+  nginx:
+    container_name: shop-yen_nginx
+    image: nginx:latest
+    depends_on:
+      - django
+    volumes:
+      - ./compose/nginx:/etc/nginx/conf.d
     ports:
-      - "8000:8000"
+      - "80:80"
