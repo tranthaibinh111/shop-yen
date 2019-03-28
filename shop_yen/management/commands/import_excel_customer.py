@@ -16,7 +16,5 @@ class Command(BaseCommand):
             path_to_file = "{}/{}".format(folder_path, file)
             service = CustomerService()
             customers = service.import_excel(path_to_file)
-            customer_news = service.insert_customers(customers)
-            for customer in customer_news:
-                print(customer)
+            service.insert_customers(customers)
         print("End!")

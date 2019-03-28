@@ -80,7 +80,7 @@ class CustomerService:
             full_name = row.get('full_name')
             if not full_name:
                 continue
-            full_name = full_name.strip()
+            full_name = full_name.strip().title()
             # first name
             first_name = re.search(r'\w+$', full_name)
             if first_name:
@@ -127,6 +127,7 @@ class CustomerService:
             # add contact email
             email = row.get('email')
             if isinstance(email, str):
+                email = email.strip().lower()
                 customers.append(Customer(
                     first_name=first_name,
                     last_name=last_name,
@@ -146,7 +147,6 @@ class CustomerService:
     def insert_customers(customers: list):
         # Insert data into Customer
         data = list()
-        customer_news = list()
         for customer in customers:
             # Check exist in Customer
             if not Customer.objects.filter(
@@ -155,14 +155,10 @@ class CustomerService:
                     Q(contact=customer.contact)
             ).exists():
                 data.append(customer)
+                print(customer)
             # Insert data if data length == 100
             if len(data) > 100:
                 news = Customer.objects.bulk_create(data)
-                for new in news:
-                    customer_news.append(new)
                 data.clear()
         if len(data) > 0:
             news = Customer.objects.bulk_create(data)
-            for new in news:
-                customer_news.append(new)
-        return customer_news
