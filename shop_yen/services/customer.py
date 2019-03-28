@@ -67,14 +67,14 @@ class CustomerService:
         else:
             return str()
 
-    def import_excel(self, path_to_file: str) -> list:
+    def import_excel(self, path_to_file: str):
         """
         Import customer info in Customer Table
         :param path_to_file:
         :return:
         """
         customers = list()
-        user = User.objects.filter(username='yensaomiennam').first()
+        user = User.objects.filter(pk=1).first()
         for row in ShopYenExcel(path_to_file).read_excel():
             # full name
             full_name = row.get('full_name')
@@ -138,10 +138,17 @@ class CustomerService:
                     creator=user,
                     writer=user
                 ))
+            # Insert 100 customer
+            if len(customers) > 100:
+                self.insert_customers(customers)
+                customers.clear()
+        # Insert when customer exists
+        if len(customers) > 0:
+            self.insert_customers(customers)
+            customers.clear()
         # Remove file target when finished
         if os.path.exists(path_to_file):
             os.remove(path_to_file)
-        return customers
 
     @staticmethod
     def insert_customers(customers: list):
@@ -158,7 +165,7 @@ class CustomerService:
                 print(customer)
             # Insert data if data length == 100
             if len(data) > 100:
-                news = Customer.objects.bulk_create(data)
+                Customer.objects.bulk_create(data)
                 data.clear()
         if len(data) > 0:
-            news = Customer.objects.bulk_create(data)
+            Customer.objects.bulk_create(data)
