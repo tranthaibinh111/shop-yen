@@ -75,73 +75,79 @@ class CustomerService:
         """
         customers = list()
         user = User.objects.filter(pk=1).first()
-        for row in ShopYenExcel(path_to_file).read_excel():
-            # full name
-            full_name = row.get('full_name')
-            if not full_name:
-                continue
-            full_name = full_name.strip().title()
-            # first name
-            first_name = re.search(r'\w+$', full_name)
-            if first_name:
-                first_name = first_name.group()
-            # last name
-            last_name = re.search(r'^\w+', full_name)
-            if last_name:
-                last_name = last_name.group()
-            # birthday
-            birthday = row.get('birthday')
-            if birthday:
-                try:
-                    birthday = parse_date(birthday.strip())
-                except Exception as ex:
-                    birthday = None
-            # add contact mobile
-            mobile = row.get('mobile')
-            if isinstance(mobile, str):
-                mobile = mobile.strip()
-                customers.append(Customer(
-                    first_name=first_name,
-                    last_name=last_name,
-                    full_name=full_name,
-                    birthday=birthday,
-                    contact_type=ContactChoice.M.name,
-                    contact=mobile,
-                    creator=user,
-                    writer=user
-                ))
-                # add contact mobile which have 10 number
-                if len(mobile) == 11:
-                    mobile = self.change_head_mobile(mobile)
-                    if isinstance(mobile, str):
-                        customers.append(Customer(
-                            first_name=first_name,
-                            last_name=last_name,
-                            full_name=full_name,
-                            birthday=birthday,
-                            contact_type=ContactChoice.M.name,
-                            contact=mobile,
-                            creator=user,
-                            writer=user
-                        ))
-            # add contact email
-            email = row.get('email')
-            if isinstance(email, str):
-                email = email.strip().lower()
-                customers.append(Customer(
-                    first_name=first_name,
-                    last_name=last_name,
-                    full_name=full_name,
-                    birthday=birthday,
-                    contact_type=ContactChoice.E.name,
-                    contact=email,
-                    creator=user,
-                    writer=user
-                ))
-            # Insert 100 customer
-            if len(customers) > 100:
-                self.insert_customers(customers)
-                customers.clear()
+        excel = ShopYenExcel(path_to_file)
+        is_standard = excel.check_format_excel()
+        if not is_standard:
+            return
+        sheets = excel.get_sheets()
+        for sheet in sheets:
+            for row in excel.read_sheet_excel(sheet):
+                # full name
+                full_name = row.get('full_name')
+                if not full_name:
+                    continue
+                full_name = full_name.strip().title()
+                # first name
+                first_name = re.search(r'\w+$', full_name)
+                if first_name:
+                    first_name = first_name.group()
+                # last name
+                last_name = re.search(r'^\w+', full_name)
+                if last_name:
+                    last_name = last_name.group()
+                # birthday
+                birthday = row.get('birthday')
+                if birthday:
+                    try:
+                        birthday = parse_date(birthday.strip())
+                    except Exception as ex:
+                        birthday = None
+                # add contact mobile
+                mobile = row.get('mobile')
+                if isinstance(mobile, str):
+                    mobile = mobile.strip()
+                    customers.append(Customer(
+                        first_name=first_name,
+                        last_name=last_name,
+                        full_name=full_name,
+                        birthday=birthday,
+                        contact_type=ContactChoice.M.name,
+                        contact=mobile,
+                        creator=user,
+                        writer=user
+                    ))
+                    # add contact mobile which have 10 number
+                    if len(mobile) == 11:
+                        mobile = self.change_head_mobile(mobile)
+                        if isinstance(mobile, str):
+                            customers.append(Customer(
+                                first_name=first_name,
+                                last_name=last_name,
+                                full_name=full_name,
+                                birthday=birthday,
+                                contact_type=ContactChoice.M.name,
+                                contact=mobile,
+                                creator=user,
+                                writer=user
+                            ))
+                # add contact email
+                email = row.get('email')
+                if isinstance(email, str):
+                    email = email.strip().lower()
+                    customers.append(Customer(
+                        first_name=first_name,
+                        last_name=last_name,
+                        full_name=full_name,
+                        birthday=birthday,
+                        contact_type=ContactChoice.E.name,
+                        contact=email,
+                        creator=user,
+                        writer=user
+                    ))
+                # Insert 100 customer
+                if len(customers) > 100:
+                    self.insert_customers(customers)
+                    customers.clear()
         # Insert when customer exists
         if len(customers) > 0:
             self.insert_customers(customers)
