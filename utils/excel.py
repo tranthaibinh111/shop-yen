@@ -14,7 +14,7 @@ class ShopYenExcel:
     def get_sheets(self):
         return self.file.sheet_names
 
-    def check_format_sheet_excel(self, file: ExcelFile, sheet) -> bool:
+    def check_format_sheet_excel(self, sheet) -> bool:
         """
         Check Excel Import has struct such as
             Columns:
@@ -26,19 +26,19 @@ class ShopYenExcel:
         :param sheet:
         :return:
         """
-        for column in pd.read_excel(file, sheet).columns:
+        for column in pd.read_excel(self.file, sheet).columns:
             if column in self.columns:
                 continue
             else:
                 title = "(Error) Shop Yen - Import Excel"
-                message = "File: {}\n".format(file.io)
+                message = "File: {}\n".format(self.file.io)
                 message += "Sheet: {}\n".format(sheet)
                 message += "Column: {} don't exist in {}".format(column, self.columns)
                 Message(**{'title': title, 'message': message}).exception_console()
                 return False
         return True
 
-    def check_format_excel(self, file: ExcelFile) -> bool:
+    def check_format_excel(self) -> bool:
         """
         Check Excel Import has struct such as
             Columns:
@@ -49,8 +49,8 @@ class ShopYenExcel:
         :param file: IO Excel
         :return: If ok return True, return False
         """
-        for sheet in file.sheet_names:
-            result = self.check_format_sheet_excel(file, sheet)
+        for sheet in self.file.sheet_names:
+            result = self.check_format_sheet_excel(sheet)
             if not result:
                 return False
         return True

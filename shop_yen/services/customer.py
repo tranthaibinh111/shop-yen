@@ -76,11 +76,11 @@ class CustomerService:
         customers = list()
         user = User.objects.filter(pk=1).first()
         excel = ShopYenExcel(path_to_file)
-        is_standard = excel.check_format_excel()
-        if not is_standard:
-            return
         sheets = excel.get_sheets()
         for sheet in sheets:
+            is_standard = excel.check_format_sheet_excel(sheet)
+            if not is_standard:
+                continue
             for row in excel.read_sheet_excel(sheet):
                 # full name
                 full_name = row.get('full_name')
