@@ -153,3 +153,6 @@ REST_FRAMEWORK = {
 # Setting a path for excel folder which used to insert customer info
 PATH_IMPORT_EXCEL = 'import/excel'
 COLUMN_EXCEL = env.list('COLUMN_EXCEL', cast=str, default=list())
+
+EMAIL_BACKEND = "sgbackend.SendGridBackend"
+SENDGRID_API_KEY = env.str('SSENDGRID_API_KEY', default="")
