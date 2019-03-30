@@ -167,12 +167,17 @@ class CustomerService:
                     Q(contact_type=customer.contact_type) &
                     Q(contact=customer.contact)
             ).exists():
+                # Check customer new which exist in data list
+                is_exist = False
                 for item in data:
-                    if not(item.full_name == customer.full_name and
-                           item.contact_type == customer.contact_type and
-                           item.contact == customer.contact):
-                        data.append(customer)
-                        print(customer)
+                    if item.full_name == customer.full_name and \
+                            item.contact_type == customer.contact_type and \
+                            item.contact == customer.contact:
+                        is_exist = True
+                        return
+                if not is_exist:
+                    data.append(customer)
+                    print(customer)
             # Insert data if data length == 100
             if len(data) > 100:
                 Customer.objects.bulk_create(data)
