@@ -9,7 +9,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         from_email = "Yến Vàng Miền Name <sport@yenvangmiennam.com>"
-        to_email = "binh.tt@hdwebsoft.co"
+        to_email = "binh.tran@hdwebsoft.co"
 
         subject = "[Sức Khỏe] Yến sào Minh Quang"
         content = """
