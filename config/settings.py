@@ -155,4 +155,4 @@ PATH_IMPORT_EXCEL = 'import/excel'
 COLUMN_EXCEL = env.list('COLUMN_EXCEL', cast=str, default=list())
 
 EMAIL_BACKEND = "sgbackend.SendGridBackend"
-SENDGRID_API_KEY = env.str('SSENDGRID_API_KEY', default="")
+SENDGRID_API_KEY = env.str('SENDGRID_API_KEY', default="")
