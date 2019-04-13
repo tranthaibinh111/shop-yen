@@ -18,8 +18,7 @@ from django.contrib import admin
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from rest_framework.authtoken import views
-if settings.DEBUG:
-    from rest_framework.documentation import include_docs_urls
+
 
 urlpatterns = [
     url(r'^', admin.site.urls),
@@ -31,7 +30,13 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
-    urlpatterns += [
+    import debug_toolbar
+    from rest_framework.documentation import include_docs_urls
+
+    # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+    urlpatterns = [
+        url('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns + [
         # https://www.django-rest-framework.org/topics/documenting-your-api/
         url(r'^docs/', include_docs_urls(title='Shop Yen API'))
     ]

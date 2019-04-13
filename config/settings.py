@@ -38,6 +38,12 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+if DEBUG:
+    DJANGO_APPS += [
+        # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+        'debug_toolbar',
+        'django_extensions',
+    ]
 
 THIRD_PARTY_APPS = [
     # https://www.django-rest-framework.org/#installation
@@ -68,13 +74,17 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+if DEBUG:
+    MIDDLEWARE += [
+        # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+    ]
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -180,3 +190,39 @@ CKEDITOR_CONFIGS = {
 # SendGrid
 EMAIL_BACKEND = "sgbackend.SendGridBackend"
 SENDGRID_API_KEY = env.str('SENDGRID_API_KEY', default="")
+
+
+if DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'sql': {
+                '()': 'utils.logging.SQLFormatter',
+                'format': '[%(duration).3f] %(statement)s',
+            }
+        },
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+            },
+            'sql': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'sql',
+                'level': 'DEBUG',
+            },
+        },
+        'loggers': {
+            'django.db.backends': {
+                'handlers': ['sql'],
+                'level': 'DEBUG',
+                'propagate': False,
+            },
+            'django.db.backends.schema': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+                'propagate': False,
+            },
+        }
+    }
