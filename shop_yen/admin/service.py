@@ -1,13 +1,22 @@
 from django.contrib import admin
 
 
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'birthday', 'gender', 'note')
+class ServicePriceAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ('Service', {
+            'fields': ('name', 'price')
+        }),
+        ('Note', {
+            'fields': ('note',)
+        })
+    )
+    list_display = ('name', 'price', 'note')
     ordering = ('-modified_date',)
-    search_fields = ('first_name', 'last_name', 'contact')
+    search_fields = ('name',)
     readonly_fields = ('created_by', 'created_date', 'modified_by', 'modified_date')
 
     def save_model(self, request, obj, form, change):
+        # Case update or new
         if change:
             obj.modified_by = request.user
         else:

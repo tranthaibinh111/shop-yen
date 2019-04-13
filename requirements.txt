@@ -1,6 +1,8 @@
 # Django REST server
 django==2.1.7
 gunicorn==19.9.0
+# image
+Pillow==6.0.0
 
 # Timezone
 pytz==2018.9
@@ -24,6 +26,10 @@ coreapi==2.3.3
 # Python Data Analysis Library
 pandas==0.24.2
 xlrd==1.2.0
+
+# ckeditor
+# https://pypi.org/project/django-ckeditor/
+django-ckeditor==5.6.1
 
 # SendGrid for Email
 sendgrid-django==4.2.0

@@ -1,23 +1,10 @@
 import uuid
 from django.db import models
-from enum import Enum
 from mvc.models import *
+from .customer import GenderChoice, ContactChoice
 
 
-# Gender Choice
-class GenderChoice(Enum):
-    M = 'Male'
-    F = 'Female'
-
-
-# Gender Choice
-class ContactChoice(Enum):
-    M = 'Mobile'
-    P = 'Home phone'
-    E = 'Email'
-
-
-class Customer(models.Model):
+class Shipper(models.Model):
     __GENDER_CHOICES = [(tag.name, tag.value) for tag in GenderChoice]
     __CONTACT_CHOICES = [(tag.name, tag.value) for tag in ContactChoice]
 
@@ -30,9 +17,9 @@ class Customer(models.Model):
     contact_type = models.CharField(max_length=2, choices=__CONTACT_CHOICES)
     contact = models.CharField(max_length=100)
     note = models.CharField(max_length=255, null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_customer')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_shipper')
     created_date = models.DateTimeField(auto_now_add=True)
-    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='modified_customer')
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='modified_shipper')
     modified_date = models.DateTimeField(auto_now=True)
 
     @property

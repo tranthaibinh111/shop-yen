@@ -1,10 +1,10 @@
 from django.contrib import admin
 
 
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'birthday', 'gender', 'note')
+class MarketplaceAdmin(admin.ModelAdmin):
+    list_display = ('advertisement', 'customer', 'start_at', 'status')
     ordering = ('-modified_date',)
-    search_fields = ('first_name', 'last_name', 'contact')
+    search_fields = ('customer.first_name', 'customer.last_name', 'customer.contact')
     readonly_fields = ('created_by', 'created_date', 'modified_by', 'modified_date')
 
     def save_model(self, request, obj, form, change):

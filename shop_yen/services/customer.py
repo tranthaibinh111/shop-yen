@@ -106,30 +106,20 @@ class CustomerService:
                 mobile = row.get('mobile')
                 if isinstance(mobile, str):
                     mobile = mobile.strip()
-                    customers.append(Customer(
-                        first_name=first_name,
-                        last_name=last_name,
-                        full_name=full_name,
-                        birthday=birthday,
-                        contact_type=ContactChoice.M.name,
-                        contact=mobile,
-                        creator=user,
-                        writer=user
-                    ))
                     # add contact mobile which have 10 number
                     if len(mobile) == 11:
                         mobile = self.change_head_mobile(mobile)
-                        if isinstance(mobile, str):
-                            customers.append(Customer(
-                                first_name=first_name,
-                                last_name=last_name,
-                                full_name=full_name,
-                                birthday=birthday,
-                                contact_type=ContactChoice.M.name,
-                                contact=mobile,
-                                creator=user,
-                                writer=user
-                            ))
+                    if mobile:
+                        customers.append(Customer(
+                            first_name=first_name,
+                            last_name=last_name,
+                            full_name=full_name,
+                            birthday=birthday,
+                            contact_type=ContactChoice.M.name,
+                            contact=mobile,
+                            created_by=user,
+                            modified_by=user
+                        ))
                 # add contact email
                 email = row.get('email')
                 if isinstance(email, str):
@@ -141,8 +131,8 @@ class CustomerService:
                         birthday=birthday,
                         contact_type=ContactChoice.E.name,
                         contact=email,
-                        creator=user,
-                        writer=user
+                        created_by=user,
+                        modified_by=user
                     ))
                 # Insert 100 customer
                 if len(customers) > 100:

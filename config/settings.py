@@ -50,6 +50,9 @@ THIRD_PARTY_APPS = [
 LOCAL_APP = [
     'mvc.apps.MvcConfig',
     'shop_yen.apps.ShopYenConfig',
+    # https://django-ckeditor.readthedocs.io/en/latest/#installation
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APP
@@ -71,7 +74,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,7 +142,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = 'static'
+STATIC_ROOT = 'static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media/'
+
+# Setting path for upload
+PRODUCT_PATH = "media/products"
+
+# https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-THOUSAND_SEPARATOR
+USE_THOUSAND_SEPARATOR = True
 
 # https://www.django-rest-framework.org/#installation
 REST_FRAMEWORK = {
@@ -154,5 +165,18 @@ REST_FRAMEWORK = {
 PATH_IMPORT_EXCEL = 'import/excel'
 COLUMN_EXCEL = env.list('COLUMN_EXCEL', cast=str, default=list())
 
+# CKEDITOR
+# https://django-ckeditor.readthedocs.io/en/latest/#installation
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor"
+CKEDITOR_UPLOAD_PATH = "media/advertisements/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_CONFIGS = {
+    'default': {
+        "type": "Basic",
+    },
+}
+
+# SendGrid
 EMAIL_BACKEND = "sgbackend.SendGridBackend"
 SENDGRID_API_KEY = env.str('SENDGRID_API_KEY', default="")

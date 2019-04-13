@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 
-class CustomerAdmin(admin.ModelAdmin):
+class ShipperAdmin(admin.ModelAdmin):
     list_display = ('name', 'birthday', 'gender', 'note')
     ordering = ('-modified_date',)
     search_fields = ('first_name', 'last_name', 'contact')
