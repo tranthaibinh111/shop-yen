@@ -4,7 +4,10 @@ version: '3.7'
 volumes:
   shop_yen_postgres_data: {}
   shop_yen_postgres_backups: {}
+  shop_yen_redis_data: {}
   shop_yen_ipython_data: {}
+  shop_yen_celery_work_data: {}
+  shop_yen_celery_beat_data: {}
 
 services:
   postgres:
@@ -18,6 +21,13 @@ services:
     ports:
       - 5432:5432
 
+  redis:
+    container_name: shop-yen_redis
+    image: redis:latest
+    command: redis-server --appendonly yes
+    volumes:
+      - shop_yen_redis_data:/data
+
   django:
     env_file: ./config/.env
     container_name: shop-yen_django
@@ -27,6 +37,7 @@ services:
     command: /start.sh
     depends_on:
       - postgres
+      - redis
     volumes:
       - .:/app
       - shop_yen_ipython_data:/root/.ipython
@@ -34,3 +45,40 @@ services:
       - postgres
     ports:
       - 8000:8000
+
+  celery:
+    env_file: ./config/.env
+    container_name: shop-yen_celery_work
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+    command: celery -A config worker -l info
+    volumes:
+      - shop_yen_celery_work_data:/code
+    depends_on:
+      - postgres
+      - redis
+
+  celery-beat:
+    env_file: ./config/.env
+    container_name: shop-yen_celery_beat
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile
+    command: celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - shop_yen_celery_beat_data:/code
+    depends_on:
+      - postgres
+      - redis
+
+  flower:
+    env_file: ./config/.env
+    container_name: shop-yen_flower
+    image: mher/flower
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - 5555:5555

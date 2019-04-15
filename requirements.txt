@@ -25,6 +25,12 @@ markdown==3.0.1                 # Markdown support for the browsable API.
 django-filter==2.1.0            # Filtering support
 coreapi==2.3.3
 
+# Celery
+redis==3.2.1
+celery==4.3.0
+django-celery-beat==1.4.0
+flower==0.9.3
+
 # Python Data Analysis Library
 pandas==0.24.2
 xlrd==1.2.0

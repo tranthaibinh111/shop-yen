@@ -38,19 +38,21 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-if DEBUG:
-    DJANGO_APPS += [
-        # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
-        'debug_toolbar',
-        'django_extensions',
-    ]
 
 THIRD_PARTY_APPS = [
     # https://www.django-rest-framework.org/#installation
     'rest_framework',
     # http://www.tomchristie.com/rest-framework-2-docs/api-guide/authentication#tokenauthentication
     'rest_framework.authtoken',
+    # http://docs.celeryproject.org/en/latest/django/first-steps-with-django.html#extensions
+    'django_celery_beat',
 ]
+if DEBUG:
+    THIRD_PARTY_APPS += [
+        # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+        'debug_toolbar',
+        'django_extensions',
+    ]
 
 # Apps specific for this prest_frameworkroject go here.
 LOCAL_APP = [
@@ -106,11 +108,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.str('POSTGRES_DB', default='shop_yen'),
-        'USER': env.str('POSTGRES_USER', default='binh'),
-        'PASSWORD': env.str('POSTGRES_PASSWORD', default='123456Binh'),
-        'HOST': env.str('POSTGRES_HOST', default='postgres'),
-        'PORT': env.str('POSTGRES_PORT', default='5432'),
+        'NAME': env.str('POSTGRES_DB', default=''),
+        'USER': env.str('POSTGRES_USER', default=''),
+        'PASSWORD': env.str('POSTGRES_PASSWORD', default=''),
+        'HOST': env.str('POSTGRES_HOST', default=''),
+        'PORT': env.str('POSTGRES_PORT', default=''),
     }
 }
 
@@ -170,6 +172,13 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+# https://www.revsys.com/tidbits/celery-and-django-and-docker-oh-my/
+CELERY_BROKER_URL = env.str('CELERY_BROKER_URL', default='')
+CELERY_RESULT_BACKEND = env.str('CELERY_RESULT_BACKEND', default='')
+CELERY_ACCEPT_CONTENT = env.list('CELERY_ACCEPT_CONTENT', str, default=[])
+CELERY_TASK_SERIALIZER = env.str('CELERY_TASK_SERIALIZER', default='')
+CELERY_RESULT_SERIALIZER = env.str('CELERY_RESULT_SERIALIZER', default='')
 
 # Setting a path for excel folder which used to insert customer info
 PATH_IMPORT_EXCEL = 'import/excel'

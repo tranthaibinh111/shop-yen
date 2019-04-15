@@ -19,5 +19,5 @@ from .shipper import Shipper
 from .delivery import DeliveryStatus, Delivery
 # Advertisement
 from .advertisement import AdvertisementType, Advertisement
-from .marketplace import MarketplaceStatus, Marketplace
-from .makertplace_history import MarketplaceHistory
+from .cron_advertisement import CronStatus, CronAdvertisement
+from .cron_advertisement_history import CronAdvertisementHistory
