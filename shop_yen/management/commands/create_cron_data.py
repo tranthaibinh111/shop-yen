@@ -23,7 +23,7 @@ class Command(BaseCommand):
                 crons = list()
                 admin = User.objects.filter(email="yensaomiennam.yensaominhquang@gmail.com").first()
                 customers = Customer.objects.filter(contact_type=ContactChoice.E.name)
-                for cus in customers.interator():
+                for cus in customers:
                     cron = CronAdvertisement.objects.filter(
                         Q(advertisement_id=advertisement_id) &
                         Q(customer=cus) &

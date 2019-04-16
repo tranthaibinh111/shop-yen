@@ -82,7 +82,7 @@ class DeliveryAdmin(admin.ModelAdmin):
                 Q(order=order) &
                 ~Q(status__in=[OrderDetailStatus.OS.name, OrderDetailStatus.CL.name, OrderDetailStatus.RF.name])
             )
-            for item in order_details.interator():
+            for item in order_details:
                 if item.status != OrderDetailStatus.D.name:
                     order_status = OrderStatus.R.name
                     break
@@ -100,7 +100,7 @@ class DeliveryAdmin(admin.ModelAdmin):
                 Q(order=order) &
                 ~Q(status__in=[OrderDetailStatus.OS.name, OrderDetailStatus.CL.name, OrderDetailStatus.RF.name])
             )
-            for item in order_details.interator():
+            for item in order_details:
                 if item.status != OrderDetailStatus.CL.name:
                     order_status = OrderStatus.D.name
                     break
