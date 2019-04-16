@@ -20,4 +20,4 @@ from .delivery import DeliveryStatus, Delivery
 # Advertisement
 from .advertisement import AdvertisementType, Advertisement
 from .cron_advertisement import CronStatus, CronAdvertisement
-from .cron_advertisement_history import CronAdvertisementHistory
+from .advertisement_history import AdvertisementHistory

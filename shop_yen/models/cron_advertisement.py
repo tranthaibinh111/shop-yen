@@ -32,3 +32,6 @@ class CronAdvertisement(models.Model):
 
     def __str__(self):
         return "{}-{}".format(self.status, self.customer)
+
+    class Meta:
+        verbose_name_plural = "Cron Advertisements"
