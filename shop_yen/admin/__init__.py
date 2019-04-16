@@ -13,6 +13,7 @@ from .shipper import ShipperAdmin
 from .delivery import DeliveryAdmin
 from .advertisement import AdvertisementAdmin
 from .cron_advertisement import CronAdvertisementAdmin
+from .advertisement_history import AdvertisementHistoryAdmin
 
 # Fee
 admin.site.register(Service, ServicePriceAdmin)
@@ -34,3 +35,4 @@ admin.site.register(Delivery, DeliveryAdmin)
 # Advertisement
 admin.site.register(Advertisement, AdvertisementAdmin)
 admin.site.register(CronAdvertisement, CronAdvertisementAdmin)
+admin.site.register(AdvertisementHistory, AdvertisementHistoryAdmin)

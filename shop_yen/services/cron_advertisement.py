@@ -1,23 +1,35 @@
 from datetime import datetime
 from django.core.mail import send_mail
+from django.db.models import Q
 from smtplib import SMTPException
 from shop_yen.models import *
 
 
 class CronAdvertisementService:
-    def __init__(self, email="Yến Vàng Miền Name <no-reply@yenvangmiennam.com>", limit=100):
-        self.email = email
-        self.limit = limit
+    __instance = None
+
+    @staticmethod
+    def get_instance():
+        """ Static access method. """
+        if CronAdvertisementService.__instance == None:
+            CronAdvertisementService()
+        return CronAdvertisementService.__instance
+
+    def __init__(self):
+        """ Virtually private constructor. """
+        if CronAdvertisementService.__instance != None:
+            raise Exception("This class is a singleton!")
+        else:
+            CronAdvertisementService.__instance = self
 
     @classmethod
-    def send_email(cls, cron_advertisements: list):
+    def send_email(cls, cron_advertisements: list, from_email: str):
         for cron in cron_advertisements:
             # Update cron status
             cron.status = CronStatus.S.name
             cron.save()
             # Send advertisement email
             try:
-                from_email = cls.email
                 recipient_list = [cron.customer.contact]
                 subject = cron.advertisement.subject
                 message = cron.advertisement.content
@@ -43,6 +55,13 @@ class CronAdvertisementService:
                 cron.save()
 
     @classmethod
-    def send_email_auto(cls):
-        cron_advertisements = CronAdvertisement.objects.filter(status=CronStatus.W.name)[:100]
-        cls.send_email(cron_advertisements)
+    def send_email_auto(
+            cls,
+            now=datetime.now(),
+            from_email="Yến Vàng Miền Name <no-reply@yenvangmiennam.com>",
+            limit=100):
+        cron_advertisements = CronAdvertisement.objects.filter(
+            Q(status=CronStatus.W.name) &
+            Q(start_at__gte=now)
+        )[:limit]
+        cls.send_email(cron_advertisements, from_email)

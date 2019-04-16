@@ -1,11 +1,8 @@
 from celery import shared_task
+from .services import *
 
 
 @shared_task
-def hello():
-    print("Hello there!")
-
-
-@shared_task
-def test2():
-    print("Binh-TT")
+def send_advertisement_email():
+    cron = CronAdvertisementService.get_instance()
+    cron.send_email_auto()
