@@ -17,7 +17,6 @@ services:
     volumes:
       - shop_yen_postgres_data:/var/lib/postgresql/data
       - shop_yen_postgres_backups:/backups
-      - ./backups:/backups
     ports:
       - 5432:5432
 

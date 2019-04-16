@@ -17,7 +17,6 @@ services:
     volumes:
       - shop_yen_postgres_data:/var/lib/postgresql/data
       - shop_yen_postgres_backups:/backups
-      - ./backups:/backups
 
   redis:
     container_name: shop-yen_redis
