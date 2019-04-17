@@ -188,7 +188,7 @@ COLUMN_EXCEL = env.list('COLUMN_EXCEL', cast=str, default=list())
 # https://django-ckeditor.readthedocs.io/en/latest/#installation
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
 CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor"
-CKEDITOR_UPLOAD_PATH = "media/advertisements/"
+CKEDITOR_UPLOAD_PATH = "advertisements/"
 CKEDITOR_IMAGE_BACKEND = "pillow"
 CKEDITOR_CONFIGS = {
     'default': {

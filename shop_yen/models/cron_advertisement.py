@@ -1,5 +1,4 @@
 import uuid
-from datetime import datetime
 from django.db import models
 from enum import Enum
 from mvc.models import *
@@ -26,9 +25,9 @@ class CronAdvertisement(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     start_at = models.DateTimeField()
     status = models.CharField(default=CronStatus.W.name, max_length=2, choices=__STATUS_CHOICES)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_marketplace')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_cron_advertisement')
     created_date = models.DateTimeField(auto_now_add=True)
-    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='modified_marketplace')
+    modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='modified_cron_advertisement')
     modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):

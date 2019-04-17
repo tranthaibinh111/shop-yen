@@ -1,6 +1,8 @@
+import pytz
 import uuid
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MinValueValidator
+from django.conf import settings
 from django.db import models
 from enum import Enum
 from mvc.models import *
@@ -38,4 +40,5 @@ class Order(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{} buy {} product at {}".format(self.customer, self.amount, self.created_date)
+        create_date = self.created_date.astimezone(pytz.timezone(settings.TIME_ZONE))
+        return "{} buy {} product at {}".format(self.customer, self.amount, create_date)

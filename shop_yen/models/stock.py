@@ -20,7 +20,7 @@ class Stock(models.Model):
     income = models.DecimalField(default=0, max_digits=30, decimal_places=0, validators=[MinValueValidator(0)], help_text="Tiền lời")
     note = models.CharField(max_length=255, null=True, blank=True)
     is_active = models.BooleanField(default=True)
-    timestamp = models.IntegerField(default=int(datetime.now().timestamp()), help_text="Thời gian cuối cùng kiểm kê kho")
+    timestamp = models.IntegerField(help_text="Thời gian cuối cùng kiểm kê kho")
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_stock')
     created_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='modified_stock')

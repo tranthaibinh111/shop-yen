@@ -1,6 +1,8 @@
+import pytz
 import uuid
-from django.db import models
 from django.core.validators import MinValueValidator
+from django.conf import settings
+from django.db import models
 from enum import Enum
 from mvc.models import *
 from .order import Order
@@ -39,7 +41,8 @@ class OrderDetail(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "{} buy {} at {}".format(self.order.customer, self.product, self.created_date)
+        create_date = self.created_date.astimezone(pytz.timezone(settings.TIME_ZONE))
+        return "{} buy {} at {}".format(self.order.customer, self.product, create_date)
 
     class Meta:
         unique_together = ('order', 'product')

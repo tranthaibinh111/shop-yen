@@ -111,4 +111,5 @@ venv.bak/
 
 # Django collection
 static/
+media/
 nginxlog/

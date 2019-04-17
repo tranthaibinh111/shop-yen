@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.db.models import Q
 from smtplib import SMTPException
 from shop_yen.models import *
@@ -32,8 +32,11 @@ class CronAdvertisementService:
             try:
                 recipient_list = [cron.customer.contact]
                 subject = cron.advertisement.subject
-                message = cron.advertisement.content
-                send_mail(subject, message, from_email, recipient_list)
+                body = cron.advertisement.content
+                # https://docs.djangoproject.com/en/2.2/topics/email/
+                msg = EmailMessage(subject, body, from_email, recipient_list)
+                msg.content_subtype = "html"  # Main content is now text/html
+                msg.send()
 
                 # Create advertisement history
                 now = datetime.now()
@@ -44,7 +47,7 @@ class CronAdvertisementService:
                     done_at=now,
                     status=CronStatus.D.name,
                     created_by=cron.created_by,
-                    created_date=cron.create_date,
+                    created_date=cron.created_date,
                     modified_by=cron.modified_by,
                     modified_date=now
                 )
@@ -62,6 +65,6 @@ class CronAdvertisementService:
             limit=100):
         cron_advertisements = CronAdvertisement.objects.filter(
             Q(status=CronStatus.W.name) &
-            Q(start_at__gte=now)
+            Q(start_at__lte=now)
         )[:limit]
         cls.send_email(cron_advertisements, from_email)

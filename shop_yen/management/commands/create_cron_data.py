@@ -12,28 +12,27 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('advertisement_id', type=int)
-        parser.add_argument('start_at', type=str)
 
     def handle(self, *args, **options):
         print("Bắt đầu khởi tạo cron data")
         try:
-            advertisement_id = options['advertisement_id']
-            start_at = parse_datetime(options["start_at"])
-            if advertisement_id and start_at:
+            advertisement = Advertisement.objects.filter(pk=options['advertisement_id']).first()
+            if advertisement:
                 crons = list()
                 admin = User.objects.filter(email="admin@yenvangmiennam.com").first()
+
                 customers = Customer.objects.filter(contact_type=ContactChoice.E.name)
                 for cus in customers:
                     cron = CronAdvertisement.objects.filter(
-                        Q(advertisement_id=advertisement_id) &
+                        Q(advertisement=advertisement) &
                         Q(customer=cus) &
-                        Q(start_at=start_at)
+                        Q(start_at=advertisement.start_at)
                     )
                     if not cron.exists():
                         crons.append(CronAdvertisement(
-                            advertisement_id=advertisement_id,
+                            advertisement=advertisement,
                             customer=cus,
-                            start_at=start_at,
+                            start_at=advertisement.start_at,
                             created_by=admin,
                             modified_by=admin
                         ))
