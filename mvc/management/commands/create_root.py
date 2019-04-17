@@ -16,7 +16,7 @@ class Command(BaseCommand):
                     last_name="",
                     username="yenvangmiennam",
                     password="lammailoi9999",
-                    email="yensaomiennam.yensaominhquang@gmail.com",
+                    email="admin@yenvangmiennam.com",
                     is_superuser=True,
                     is_staff=True,
                     timezone="Asia/Ho_Chi_Minh"

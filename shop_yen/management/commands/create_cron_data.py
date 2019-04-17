@@ -21,7 +21,7 @@ class Command(BaseCommand):
             start_at = parse_datetime(options["start_at"])
             if advertisement_id and start_at:
                 crons = list()
-                admin = User.objects.filter(email="yensaomiennam.yensaominhquang@gmail.com").first()
+                admin = User.objects.filter(email="admin@yenvangmiennam.com").first()
                 customers = Customer.objects.filter(contact_type=ContactChoice.E.name)
                 for cus in customers:
                     cron = CronAdvertisement.objects.filter(

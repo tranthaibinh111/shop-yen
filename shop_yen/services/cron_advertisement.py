@@ -58,7 +58,7 @@ class CronAdvertisementService:
     def send_email_auto(
             cls,
             now=datetime.now(),
-            from_email="Yến Vàng Miền Name <no-reply@yenvangmiennam.com>",
+            from_email="Yến Vàng Miền Name <advertisement@yenvangmiennam.com>",
             limit=100):
         cron_advertisements = CronAdvertisement.objects.filter(
             Q(status=CronStatus.W.name) &
