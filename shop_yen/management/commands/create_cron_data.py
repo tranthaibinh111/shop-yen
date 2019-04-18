@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand
-from django.utils.dateparse import parse_datetime
 from django.db.models import Q
 from mvc.models import *
 from shop_yen.models import *

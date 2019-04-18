@@ -1,7 +1,6 @@
 from datetime import datetime
 from django.core.mail import EmailMessage
 from django.db.models import Q
-from smtplib import SMTPException
 from shop_yen.models import *
 
 
@@ -53,7 +52,7 @@ class CronAdvertisementService:
                 )
                 # Remove cron when the process is done
                 cron.delete()
-            except SMTPException:
+            except Exception as ex:
                 cron.status = CronStatus.E.name
                 cron.save()
 
@@ -61,7 +60,7 @@ class CronAdvertisementService:
     def send_email_auto(
             cls,
             now=datetime.now(),
-            from_email="Yến Vàng Miền Name <advertisement@yenvangmiennam.com>",
+            from_email="Yến Vàng Miền Nam <staff@yenvangmiennam.com>",
             limit=100):
         cron_advertisements = CronAdvertisement.objects.filter(
             Q(status=CronStatus.W.name) &
